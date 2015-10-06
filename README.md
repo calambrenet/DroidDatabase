@@ -89,9 +89,9 @@ try {
 <p><strong>Create a new record:</strong> </p>
 
 <pre><code>User user = new User();            
-user.set_id("pepe21");
-user.setEmail("pepeluis@correo.es");
-user.setName("pepe luis");
+user.set_id("user21");
+user.setEmail("user@mail.com");
+user.setName("tom tucker");
 
 DroidDatabase db = new DroidDatabase&lt;&gt;(getContext(), user);
 User user_saved = null;
@@ -108,7 +108,7 @@ try {
 
 <p><strong>Update existing one:</strong> </p>
 
-<pre><code>user_saved.setName("juanito");
+<pre><code>user_saved.setName("Family Guy");
 
 db = new DroidDatabase&lt;&gt;(getContext(), user_saved);
 try {
@@ -124,19 +124,19 @@ try {
 User table = null;
 
 //search for an item using a filter    
-table = new Database&lt;&gt;(getContext(), User.class).filterby("_id", "pepe21", Database.EQUAL).findOne();
+table = new Database&lt;&gt;(getContext(), User.class).filterby("_id", "user21", Database.EQUAL).findOne();
 
 //search for an item using several filters
 Map&lt;String, String&gt; filter = new HashMap&lt;&gt;();
-filter.put("_id", "pepe21");
-filter.put("email", "pepeluis@correo.es");
+filter.put("_id", "user21");
+filter.put("email", "user@mail.com");
 table = new Database&lt;&gt;(getContext(), User.class).filterby(filter, Database.EQUAL).findOne();
 
 //search multiple elements 
-table_list = new Database&lt;&gt;(getContext(), User.class).filterby("email", "calambrenet@gmail.com", Database.EQUAL).find();
+table_list = new Database&lt;&gt;(getContext(), User.class).filterby("email", "user@mail.com", Database.EQUAL).find();
 
 //remove one or more elements
-new Database&lt;&gt;(getContext(), User.class).filterby("_id", "pepe", Database.EQUAL).delete();
+new Database&lt;&gt;(getContext(), User.class).filterby("_id", "user21", Database.EQUAL).delete();
 </code></pre>
 
 <p></p><h2 id="todo"> TODO</h2> <br>
