@@ -71,7 +71,7 @@ public class User implements DatabaseModel{
 }
 </code></pre>
 
-<p>At the beginning of the app, before making any calls to the database, you must register the tables and initialize * DroidDatabase *:</p>
+<p>At the beginning of the app, before making any calls to the database, you must register the tables and initialize DroidDatabase:</p>
 
 <pre><code>Class[] modelList = new Class[]{
     User.class,
