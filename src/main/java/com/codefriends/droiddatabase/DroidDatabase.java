@@ -17,9 +17,12 @@
 package com.codefriends.droiddatabase;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.codefriends.droiddatabase.exceptions.DoesNotExistException;
@@ -46,14 +49,10 @@ import java.util.Map;
  * Created by calambrenet on 17/09/15.
  */
 public class DroidDatabase<T extends DatabaseModel> extends SQLiteOpenHelper {
-    private final boolean DEBUG = true;
     private final String TAG = "droiddatabase";
 
     public static final int EQUAL = 1;
     public static final int NOT_EQUAL = 0;
-
-    private static String DATABASE_NAME = null;
-    private static Integer DATABASE_VERSION = null;
 
     private Class<T> mModelClass = null;
     private T mModel;
@@ -62,6 +61,10 @@ public class DroidDatabase<T extends DatabaseModel> extends SQLiteOpenHelper {
 
     private Map<String, String> Query = new HashMap<>();
     private List<Field> filterListFields = new ArrayList<>();
+
+    private static boolean DEBUG = true;
+    private static String DATABASE_NAME = null;
+    private static Integer DATABASE_VERSION = null;
 
     private String OrderBy = null;
     private String OrderType = null;
@@ -231,9 +234,17 @@ public class DroidDatabase<T extends DatabaseModel> extends SQLiteOpenHelper {
         return mModel;
     }
 
-    public static void Register(String databaseName, int version, Class[] modelList) throws Exception, NotValidDatabaseTableException {
-        DATABASE_NAME = databaseName;
-        DATABASE_VERSION = version;
+    public static void Register(Context context, Class[] modelList) throws Exception, NotValidDatabaseTableException {
+        ApplicationInfo ai = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+        Bundle bundle = ai.metaData;
+
+        DATABASE_NAME = bundle.getString("DATABASE_NAME");
+        if(DATABASE_NAME == null)
+            DATABASE_NAME = "database_db";
+
+        DATABASE_VERSION = bundle.getInt("DATABASE_VERSION", 1);
+        DEBUG = bundle.getBoolean("QUERY_LOG", false);
+
 
         for (int c = 0; c < modelList.length; c++) {
             if(!modelList[c].isAnnotationPresent(table.class))
