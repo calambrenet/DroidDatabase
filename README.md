@@ -44,8 +44,6 @@ public class User implements DatabaseModel{
 
     @Override
     public Integer getId() {
-        Log.d("community", "getId()");
-
         return id;
     }
     @Override
