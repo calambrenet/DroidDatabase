@@ -60,7 +60,7 @@ public class DroidDatabase<T extends DatabaseModel> extends SQLiteOpenHelper {
     private static ArrayList<String> databaseStructure = new ArrayList<>();
 
     private Map<String, String> Query = new HashMap<>();
-    private List<Field> filterListFields = new ArrayList<>();
+    private List<Field> filterListFields;
 
     private static boolean DEBUG = true;
     private static String DATABASE_NAME = null;
@@ -337,8 +337,7 @@ public class DroidDatabase<T extends DatabaseModel> extends SQLiteOpenHelper {
         if(mModelClass == null)
             throw new Exception("You must init with a model class.");
 
-        if (filter == null)
-            return this;
+        filterListFields = new ArrayList<>();
 
         Field[] fields = mModelClass.getDeclaredFields();
         for (int d = 0; d < fields.length; d++) {
@@ -346,6 +345,8 @@ public class DroidDatabase<T extends DatabaseModel> extends SQLiteOpenHelper {
                 filterListFields.add(fields[d]);
         }
 
+        if (filter == null)
+            return this;
 
         for(Map.Entry<String, String> entry : filter.entrySet()) {
             String column = entry.getKey();
@@ -407,7 +408,10 @@ public class DroidDatabase<T extends DatabaseModel> extends SQLiteOpenHelper {
                 sql += ", ";
         }
 
-        sql += " FROM " + table_name + " WHERE";
+        sql += " FROM " + table_name;
+
+        if(Query.size() > 0)
+            sql += " WHERE";
 
         boolean first = true;
         for(Map.Entry<String, String> e : Query.entrySet()) {
