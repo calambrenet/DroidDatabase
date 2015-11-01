@@ -474,16 +474,20 @@ public class DroidDatabase<T extends DatabaseModel> extends SQLiteOpenHelper {
     public void delete() throws Exception {
         String table_name = getTableNamefromModel(mModelClass);
 
-        String sql = "DELETE FROM " + table_name + " WHERE";
+        String sql = "DELETE FROM " + table_name;
 
-        boolean first = true;
-        for(Map.Entry<String, String> e : Query.entrySet()) {
-            if(!first){
-                sql += " AND";
+        if(Query.size() > 0) {
+            sql += " WHERE";
+
+            boolean first = true;
+            for (Map.Entry<String, String> e : Query.entrySet()) {
+                if (!first) {
+                    sql += " AND";
+                }
+
+                sql += " " + e.getKey() + e.getValue();
+                first = false;
             }
-
-            sql += " " + e.getKey() + e.getValue();
-            first = false;
         }
 
         sql += ";";
