@@ -149,6 +149,9 @@ public class DroidDatabase<T extends DatabaseModel> extends SQLiteOpenHelper {
             if(type.equalsIgnoreCase("integer"))
                 sql += String.valueOf((Integer) method.invoke(mModel));
 
+            else if(type.equalsIgnoreCase("long"))
+                sql += String.valueOf((Long) method.invoke(mModel));
+
             else if(type.equalsIgnoreCase("varchar"))
                 if(method.invoke(mModel)!=null)
                     sql += '"' + (String) method.invoke(mModel) + '"';
@@ -206,6 +209,9 @@ public class DroidDatabase<T extends DatabaseModel> extends SQLiteOpenHelper {
             if(type.equalsIgnoreCase("integer"))
                 sql += String.valueOf((Integer) method.invoke(mModel));
 
+            else if(type.equalsIgnoreCase("long"))
+                sql += String.valueOf((Long) method.invoke(mModel));
+
             else if(type.equalsIgnoreCase("varchar"))
                 if(method.invoke(mModel)!=null)
                     sql += '"' + (String) method.invoke(mModel) + '"';
@@ -260,7 +266,7 @@ public class DroidDatabase<T extends DatabaseModel> extends SQLiteOpenHelper {
                 if(fields[d].isAnnotationPresent(field.class)) {
                     String type = fields[d].getAnnotation(field.class).type();
 
-                    if(type.equalsIgnoreCase("integer")){
+                    if(type.equalsIgnoreCase("integer") || type.equalsIgnoreCase("long")){
                         sql += fields[d].getName() + " INTEGER";
                         if (fields[d].isAnnotationPresent(primary_key.class)) {
                             sql += " PRIMARY KEY";
@@ -455,6 +461,10 @@ public class DroidDatabase<T extends DatabaseModel> extends SQLiteOpenHelper {
                 if(type.equalsIgnoreCase("integer")) {
                     Method method = mModelClass.getDeclaredMethod(function, paramInt);
                     method.invoke(obj, c.getInt(d));
+                }
+                else if(type.equalsIgnoreCase("long")) {
+                    Method method = mModelClass.getDeclaredMethod(function, paramInt);
+                    method.invoke(obj, c.getLong(d));
                 }
                 else if(type.equalsIgnoreCase("varchar")) {
                     Method method = mModelClass.getDeclaredMethod(function, paramString);
