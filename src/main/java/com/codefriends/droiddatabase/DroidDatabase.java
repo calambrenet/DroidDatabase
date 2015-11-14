@@ -403,6 +403,10 @@ public class DroidDatabase<T extends DatabaseModel> extends SQLiteOpenHelper {
         Class[] paramInt = new Class[1];
         paramInt[0] = Integer.TYPE;
 
+        //long parameter
+        Class[] paramLong = new Class[1];
+        paramLong[0] = Long.TYPE;
+
         String table_name = getTableNamefromModel(mModelClass);
 
         String sql = "SELECT ";
@@ -458,12 +462,15 @@ public class DroidDatabase<T extends DatabaseModel> extends SQLiteOpenHelper {
 
                 String type = current_field.getAnnotation(field.class).type();
 
+                debug("function: " + function);
+                debug("type: " + type);
+
                 if(type.equalsIgnoreCase("integer")) {
                     Method method = mModelClass.getDeclaredMethod(function, paramInt);
                     method.invoke(obj, c.getInt(d));
                 }
                 else if(type.equalsIgnoreCase("long")) {
-                    Method method = mModelClass.getDeclaredMethod(function, paramInt);
+                    Method method = mModelClass.getDeclaredMethod(function, paramLong);
                     method.invoke(obj, c.getLong(d));
                 }
                 else if(type.equalsIgnoreCase("varchar")) {
