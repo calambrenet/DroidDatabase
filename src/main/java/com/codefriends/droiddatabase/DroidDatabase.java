@@ -152,6 +152,9 @@ public class DroidDatabase<T extends DatabaseModel> extends SQLiteOpenHelper {
             else if(type.equalsIgnoreCase("long"))
                 sql += String.valueOf((Long) method.invoke(mModel));
 
+            else if(type.equalsIgnoreCase("boolean"))
+                sql += String.valueOf((Boolean) method.invoke(mModel) ? 1 : 0);
+
             else if(type.equalsIgnoreCase("varchar"))
                 if(method.invoke(mModel)!=null)
                     sql += '"' + (String) method.invoke(mModel) + '"';
@@ -211,6 +214,16 @@ public class DroidDatabase<T extends DatabaseModel> extends SQLiteOpenHelper {
 
             else if(type.equalsIgnoreCase("long"))
                 sql += String.valueOf((Long) method.invoke(mModel));
+
+            else if(type.equalsIgnoreCase("boolean")) {
+                Integer value;
+                if (method.invoke(mModel) == null)
+                    value = null;
+                else
+                    value = (Boolean) method.invoke(mModel) ? 1 : 0;
+
+                sql += String.valueOf(value);
+            }
 
             else if(type.equalsIgnoreCase("varchar"))
                 if(method.invoke(mModel)!=null)
@@ -273,6 +286,9 @@ public class DroidDatabase<T extends DatabaseModel> extends SQLiteOpenHelper {
                             if(fields[d].getAnnotation(primary_key.class).type()!=null)
                                 sql += " AUTOINCREMENT";
                         }
+                    }
+                    else if(type.equalsIgnoreCase("boolean")){
+                        sql += fields[d].getName() + " INTEGER default 0";
                     }
                     else if(type.equalsIgnoreCase("varchar")){
                         sql += fields[d].getName() + " VARCHAR";
@@ -407,6 +423,10 @@ public class DroidDatabase<T extends DatabaseModel> extends SQLiteOpenHelper {
         Class[] paramLong = new Class[1];
         paramLong[0] = Long.TYPE;
 
+        //int parameter
+        Class[] paramBool = new Class[1];
+        paramBool[0] = Boolean.TYPE;
+
         String table_name = getTableNamefromModel(mModelClass);
 
         String sql = "SELECT ";
@@ -468,6 +488,10 @@ public class DroidDatabase<T extends DatabaseModel> extends SQLiteOpenHelper {
                 if(type.equalsIgnoreCase("integer")) {
                     Method method = mModelClass.getDeclaredMethod(function, paramInt);
                     method.invoke(obj, c.getInt(d));
+                }
+                else if(type.equalsIgnoreCase("boolean")) {
+                    Method method = mModelClass.getDeclaredMethod(function, paramBool);
+                    method.invoke(obj, c.getInt(d) == 1);
                 }
                 else if(type.equalsIgnoreCase("long")) {
                     Method method = mModelClass.getDeclaredMethod(function, paramLong);
